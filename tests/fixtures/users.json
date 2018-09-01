@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "5b89551951c26ed42b787010",
+    "username": "rich",
+    "email": "rich@gmail.commmm",
+    "created_at": "2018-08-31T14:47:53.725Z",
+    "updated_at": "2018-09-01T19:44:25.719Z",
+    "__v": 0
+  },
+  {
+    "_id": "5b8aa7cad13d88147fd56a5b",
+    "username": "bill",
+    "email": "rich@gmail.com",
+    "created_at": "2018-09-01T14:52:58.129Z",
+    "updated_at": "2018-09-01T14:52:58.130Z",
+    "__v": 0
+  }
+]
