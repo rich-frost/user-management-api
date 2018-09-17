@@ -2,13 +2,10 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-
 const validator = require('email-validator');
-
 const bcrypt = require('bcrypt');
 
 const BCRYPT_SALT_ROUNDS = 12;
-
 
 const UserSchema = new Schema({
     username: { type: String, required: true },
