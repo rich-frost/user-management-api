@@ -12,7 +12,7 @@ This will download all the necessary dependencies.
 
 ### Prerequisites before running
 
-It is expected you have a running local MongoDB, read here if you haven't already installed MongoDB [https://docs.mongodb.com/manual/installation/]
+It is expected you have a running local MongoDB, read here if you haven't already installed MongoDB [https://docs.mongodb.com/manual/installation/](https://docs.mongodb.com/manual/installation/)
 
 The API expects there to be a MongoDB created called UsersDB locally, i.e.: `mongodb://localhost:27017/UsersDB`.
 Please make sure you have created this before running the API.
