@@ -1,145 +1,111 @@
-const User = require("../models/User");
-const Boom = require("boom");
-const bcrypt = require("bcrypt");
-const BCRYPT_SALT_ROUNDS = 12;
-const mongoose = require("mongoose");
-const auth = require("../utils/auth");
-const validator = require("email-validator");
+/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
+const Boom = require('boom');
+const mongoose = require('mongoose');
+const validator = require('email-validator');
+const User = require('../models/user');
+const auth = require('../utils/auth');
 
-const find = (request, reply) => {
-    return User.find();
+const checkValidID = (id) => {
+    const { ObjectId } = mongoose.Types;
+
+    if (!ObjectId.isValid(id)) {
+        throw Boom.badRequest('User ID is not valid format');
+    }
 };
 
-const findUser = (request, reply) => {
-    if (!request.params.id) {
-        return Boom.badRequest("User ID is a required parameter");
-    }
+const find = () => User.find();
 
-    const ObjectID = mongoose.Types.ObjectId;
-    if (!ObjectID.isValid(request.params.id)) {
-        return Boom.badRequest("User ID is not valid format");
-    }
+const findUser = (request) => {
+    checkValidID(request.params.id);
 
-    return User.findOne({ _id: request.params.id }).then(user => {
+    return User.findOne({ _id: request.params.id }).then((user) => {
         if (user === null) {
-            return Boom.notFound("User not found");
+            return Boom.notFound('User not found');
         }
 
         return user;
     });
 };
 
-const createUser = (request, reply) => {
+const createUser = (request) => {
     const { username, email, password } = request.payload;
 
-    if (!validator.validate(email)) {
-        return Boom.badRequest("Email is not valid format");
-    }
-    return bcrypt
-        .hash(password, BCRYPT_SALT_ROUNDS)
-        .then(password => {
-            const user = new User({
-                username,
-                email,
-                password
-            });
+    const user = new User({
+        username,
+        email,
+        password,
+    });
 
-            return user.save();
-        })
-        .then(data => {
-            return User.findById(data._id);
-        })
-        .catch(error => {
-            console.log(error);
-            return Boom("Error saving user details: " + error);
-        });
+    return user.save()
+        .then(data => User.findById(data._id))
+        .catch(error => Boom.badRequest(error));
 };
 
-const updateUser = (request, reply) => {
-    const id = request.params.id;
-    const ObjectID = mongoose.Types.ObjectId;
-
+const updateUser = (request) => {
     if (auth.checkAuthorization(request)) {
         try {
-            //TODO refactor into helper
-            if (!ObjectID.isValid(id)) {
-                return Boom.badRequest("User ID is not valid format");
-            }
+            checkValidID(request.params.id);
 
-            const username = request.payload.username;
-            const email = request.payload.email;
+            const { id } = request.params;
+            const { username, email } = request.payload;
 
             if (email && !validator.validate(email)) {
-                return Boom.badRequest("Email is not valid format");
+                return Boom.badRequest('Email is not valid format');
             }
 
-            let update = {
-                updated_at: Date.now()
+            const update = {
+                updated_at: Date.now(),
             };
 
             if (username) {
-                update["username"] = username;
+                update.username = username;
             }
             if (email) {
-                update["email"] = email;
+                update.email = email;
             }
 
-            return User.findOneAndUpdate({ _id: id }, update).then(data => {
+            return User.findOneAndUpdate({ _id: id }, update, { new: true }).then((data) => {
                 if (!data) {
-                    return Boom.notFound("User not found with ID: " + id);
+                    return Boom.notFound(`User not found with ID: ${id}`);
                 }
                 return User.findById(data._id);
             });
         } catch (e) {
-            console.log(e);
-            return e;
+            return new Boom(e);
         }
     } else {
-        throw Boom.unauthorized("You are not authorized to patch user details");
+        return Boom.unauthorized('You are not authorized to patch user details');
     }
 };
 
-const deleteUser = (request, reply) => {
-    const id = request.params.id;
-    const ObjectID = mongoose.Types.ObjectId;
-
-    if (!ObjectID.isValid(id)) {
-        throw Boom.badRequest("ID is not valid");
-    }
+const deleteUser = (request) => {
     if (auth.checkAuthorization(request)) {
+        const { id } = request.params;
+
+        checkValidID(id);
+
         return User.findByIdAndDelete({ _id: id })
-            .then(data => {
+            .then((data) => {
                 if (data !== null) {
                     return {
-                        message: "Deleted user " + id
+                        message: `Deleted user ${id}`,
                     };
-                } else {
-                    throw Boom.notFound("User ID " + id + " not found");
                 }
+                throw Boom.notFound(`User ID ${id} not found`);
             })
-            .catch(error => {
-                console.log(error);
-                return error;
-            });
-    } else {
-        throw Boom.unauthorized("You are not authorized to delete a user");
+            .catch(error => error);
     }
+    throw Boom.unauthorized('You are not authorized to delete a user');
 };
 
-const deleteAllUsers = (request, reply) => {
-    if (auth.checkAuthorization(request)) {
-        try {
-            User.deleteMany({});
-
-            return {
-                message: "Removed all users"
-            };
-        } catch (e) {
-            return e;
-        }
-    } else {
-        throw Boom.unauthorized("You are not authorized to delete users");
+const deleteAllUsers = (request) => {
+    if (auth.checkSUAuthorization(request)) {
+        return User.deleteMany({})
+            .then(() => ({
+                message: 'Deleted all users',
+            }));
     }
+    throw Boom.unauthorized('You are not authorized to delete users');
 };
 
 module.exports = {
@@ -148,5 +114,5 @@ module.exports = {
     createUser,
     updateUser,
     deleteUser,
-    deleteAllUsers
+    deleteAllUsers,
 };
