@@ -32,10 +32,11 @@ The API will be running on [http://localhost:4000](http://localhost:4000)
 To run the tests on the commandline, run `npm test`
 This will lint the code, run the Mocha & Chai tests as well as print out the test coverage report.
 
+Tests are run on port 4010 and against the TestUsersDB as defined in `config/tests.json`
 
 ## Documentation
 
-Live documentation is provided in Swagger at [http://localhost:4000/documentation]
+Live documentation is provided in Swagger at [http://localhost:4000/documentation](http://localhost:4000/documentation)
 
 
 ## This API should fullfil the following criteria:
