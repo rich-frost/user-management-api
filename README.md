@@ -24,7 +24,7 @@ To get MongoDB running locally you will want to run `sudo mongod`
 
 To get the API up and running, from the commandline run `npm start`
 
-The API will be running on [http://localhost:4000]
+The API will be running on [http://localhost:4000](http://localhost:4000)
 
 
 ## Running the tests
