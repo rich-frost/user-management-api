@@ -9,7 +9,7 @@ const checkValidID = (id) => {
     const { ObjectId } = mongoose.Types;
 
     if (!ObjectId.isValid(id)) {
-        throw Boom.badRequest('User ID is not valid format');
+        return Boom.badRequest('User ID is not valid format');
     }
 };
 
@@ -87,11 +87,11 @@ const deleteUser = (request) => {
                         message: `Deleted user ${id}`,
                     };
                 }
-                throw Boom.notFound(`User ID ${id} not found`);
+                return Boom.notFound(`User ID ${id} not found`);
             })
             .catch(error => error);
     }
-    throw Boom.unauthorized('You are not authorized to delete a user');
+    return Boom.unauthorized('You are not authorized to delete a user');
 };
 
 const deleteAllUsers = (request) => {
@@ -101,7 +101,7 @@ const deleteAllUsers = (request) => {
                 message: 'Deleted all users',
             }));
     }
-    throw Boom.unauthorized('You are not authorized to delete users');
+    return Boom.unauthorized('You are not authorized to delete users');
 };
 
 module.exports = {
