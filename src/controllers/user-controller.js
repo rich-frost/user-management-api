@@ -9,7 +9,7 @@ const checkValidID = (id) => {
     const { ObjectId } = mongoose.Types;
 
     if (!ObjectId.isValid(id)) {
-        return Boom.badRequest('User ID is not valid format');
+        throw Boom.badRequest('User ID is not valid format');
     }
 };
 
