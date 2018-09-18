@@ -84,26 +84,6 @@ describe('/PATCH users', () => {
         });
     });
 
-    const apiKeyPatchRequest = (key, value, done) => {
-        const { username } = baseUser;
-        chai.request(serverUrl)
-            .patch('/api/v1/users/123')
-            .set(key, value)
-            .send({ username })
-            .end((err, res) => {
-                checkErrorRequestResponse(res, 401, 'You are not authorized to patch user details');
-                done();
-            });
-    };
-
-    it('should reject if incorrect API key sent', (done) => {
-        apiKeyPatchRequest('x-api-key', 'not-the-correct-key', done);
-    });
-
-    it('should reject if no API key sent', (done) => {
-        apiKeyPatchRequest('no-key', 'no-value', done);
-    });
-
     it('should reject if user ID is not valid UUID', (done) => {
         const { username } = baseUser;
         chai.request(serverUrl)

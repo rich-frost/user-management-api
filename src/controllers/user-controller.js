@@ -42,39 +42,35 @@ const createUser = (request) => {
 };
 
 const updateUser = (request) => {
-    if (auth.checkAuthorization(request)) {
-        try {
-            checkValidID(request.params.id);
+    try {
+        checkValidID(request.params.id);
 
-            const { id } = request.params;
-            const { username, email } = request.payload;
+        const { id } = request.params;
+        const { username, email } = request.payload;
 
-            if (email && !validator.validate(email)) {
-                return Boom.badRequest('Email is not valid format');
-            }
-
-            const update = {
-                updated_at: Date.now(),
-            };
-
-            if (username) {
-                update.username = username;
-            }
-            if (email) {
-                update.email = email;
-            }
-
-            return User.findOneAndUpdate({ _id: id }, update, { new: true }).then((data) => {
-                if (!data) {
-                    return Boom.notFound(`User not found with ID: ${id}`);
-                }
-                return User.findById(data._id);
-            });
-        } catch (e) {
-            return new Boom(e);
+        if (email && !validator.validate(email)) {
+            return Boom.badRequest('Email is not valid format');
         }
-    } else {
-        return Boom.unauthorized('You are not authorized to patch user details');
+
+        const update = {
+            updated_at: Date.now(),
+        };
+
+        if (username) {
+            update.username = username;
+        }
+        if (email) {
+            update.email = email;
+        }
+
+        return User.findOneAndUpdate({ _id: id }, update, { new: true }).then((data) => {
+            if (!data) {
+                return Boom.notFound(`User not found with ID: ${id}`);
+            }
+            return User.findById(data._id);
+        });
+    } catch (e) {
+        return new Boom(e);
     }
 };
 
