@@ -43,7 +43,7 @@ Live documentation is provided in Swagger at [http://localhost:4000/documentatio
 
 - implement creation, reading and deletion of users​
 - for deletion of a user, an API key `secretkey` should be provided in the request as you see fit
-- have a User model which has the following attributes: username, email, password. Feel free to add others if you wish​
-- have User model should be persistable, but there's no expectation that the storage engine would be used in production, so a flat file database such as SQLite would be fine
+- have a User model which has the following attributes: username, email, password
+- have User model should be persistable
 - have passwords which are stored securely​
-- have some sort of documentation (tests are fine)
+- have some sort of documentation
