@@ -88,8 +88,7 @@ const deleteUser = (request) => {
                     };
                 }
                 return Boom.notFound(`User ID ${id} not found`);
-            })
-            .catch(error => error);
+            });
     }
     return Boom.unauthorized('You are not authorized to delete a user');
 };
