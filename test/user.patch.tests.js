@@ -18,7 +18,6 @@ const baseUser = {
 };
 
 describe('/PATCH users', () => {
-
     beforeEach((done) => { // Before each test we empty the database
         User.deleteMany({}, (err) => {
             done();
@@ -68,7 +67,7 @@ describe('/PATCH users', () => {
         });
     });
 
-    it('should reject if email not valid', (done) => {
+    it('should reject with a 400 error if email not valid', (done) => {
         createUser((err, user) => {
             const updatedUserInfo = {
                 email: 'john.b.smith$wrong.com',
@@ -84,7 +83,7 @@ describe('/PATCH users', () => {
         });
     });
 
-    it('should reject if user ID is not valid UUID', (done) => {
+    it('should reject with a 400 error  if user ID is not valid UUID', (done) => {
         const { username } = baseUser;
         chai.request(serverUrl)
             .patch('/api/v1/users/123')
@@ -96,7 +95,7 @@ describe('/PATCH users', () => {
             });
     });
 
-    it('should error if user ID not found', (done) => {
+    it('should error with a 404 if user ID not found', (done) => {
         const id = '5b9fbdd2e99a954ac404b123';
         const { username } = baseUser;
         chai.request(serverUrl)

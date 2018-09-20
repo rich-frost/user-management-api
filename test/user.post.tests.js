@@ -17,7 +17,6 @@ const baseUser = {
 };
 
 describe('/POST Users', () => {
-
     beforeEach((done) => {
         User.deleteMany({}, (err) => {
             done();
@@ -36,7 +35,7 @@ describe('/POST Users', () => {
             });
     });
 
-    it('should fail to save if no username provided', (done) => {
+    it('should fail to save with a 400 error if no username provided', (done) => {
         const { email, password } = baseUser;
         const user = {
             email,
@@ -51,7 +50,7 @@ describe('/POST Users', () => {
             });
     });
 
-    it('should fail to save if no email provided', (done) => {
+    it('should fail to save with a 400 error if no email provided', (done) => {
         const { username, password } = baseUser;
         const user = {
             username,
@@ -66,7 +65,7 @@ describe('/POST Users', () => {
             });
     });
 
-    it('should fail to save if email is not in correct format', (done) => {
+    it('should fail to save with a 400 error if email is not in correct format', (done) => {
         const { username, password } = baseUser;
         const user = {
             username,
@@ -82,7 +81,7 @@ describe('/POST Users', () => {
             });
     });
 
-    it('should fail to save if no password provided', (done) => {
+    it('should fail to save with a 400 error if no password provided', (done) => {
         const { email, username } = baseUser;
         const user = {
             email,

@@ -18,7 +18,6 @@ const baseUser = {
 };
 
 describe('/DELETE user', () => {
-
     beforeEach((done) => { // Before each test we empty the database
         User.deleteMany({}, (err) => {
             done();
@@ -57,7 +56,7 @@ describe('/DELETE user', () => {
         apiKeyDeleteRequest('no-key', '', done);
     });
 
-    it('should reject if user ID is not valid UUID', (done) => {
+    it('should reject with a 400 error if user ID is not valid UUID', (done) => {
         chai.request(serverUrl)
             .delete('/api/v1/users/123')
             .set('x-api-key', 'secretkey')
@@ -67,7 +66,7 @@ describe('/DELETE user', () => {
             });
     });
 
-    it('should error if user ID not found', (done) => {
+    it('should return a 404 error if user ID not found', (done) => {
         const id = '5b9fbdd2e99a954ac404b123';
 
         chai.request(serverUrl)
@@ -135,5 +134,4 @@ describe('/DELETE user', () => {
         body.should.have.property('message');
         body.message.should.equal(message);
     };
-
 });
